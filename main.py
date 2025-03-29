@@ -1,10 +1,20 @@
 import streamlit as st
 import google.generativeai as genai
+import os
+from dotenv import load_dotenv
 
-# Get API key from Streamlit secrets
-API_KEY = st.secrets[GEMINI_API_KEY]
+# Load environment variables from .env file (For Local Development)
+load_dotenv()
 
-# Configure Gemini API
+# Get API Key from environment variable or Streamlit secrets
+API_KEY = os.getenv("GEMINI_API_KEY") or st.secrets.get("GEMINI_API_KEY")
+
+# Error handling for missing API key
+if not API_KEY:
+    st.error("❌ API Key not found! Set it in a `.env` file (local) or `Streamlit secrets` (cloud).")
+    st.stop()
+
+# Configure Google Gemini API
 genai.configure(api_key=API_KEY)
 
 # Streamlit UI
